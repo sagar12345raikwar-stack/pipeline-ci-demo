@@ -1,0 +1,46 @@
+pipeline {
+    agent any
+
+    stages {
+
+        stage('Checkout') {
+            steps {
+                git 'https://github.com/sagar12345raikwar-stack/pipeline-ci-demo.git'
+            }
+        }
+
+        stage('Build Application') {
+            steps {
+                sh 'mvn clean compile'
+            }
+        }
+
+        stage('Run Tests') {
+            steps {
+                sh 'mvn test'
+            }
+        }
+
+        stage('Run tests') {
+            steps {
+                sh 'mvn test runs'
+            }
+        }
+
+        stage('package the application) {
+            steps {
+                echo ' mvn application package...'
+            }
+        }
+    }
+
+    post {
+        success {
+            echo 'Build Successful!'
+        }
+
+        failure {
+            echo 'Build Failed!'
+        }
+    }
+}
