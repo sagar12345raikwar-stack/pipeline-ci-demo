@@ -5,7 +5,8 @@ pipeline {
 
         stage('Checkout') {
             steps {
-                git 'https://github.com/sagar12345raikwar-stack/pipeline-ci-demo.git'
+                git branch: 'Main',
+                    url: 'https://github.com/sagar12345raikwar-stack/pipeline-ci-demo.git'
             }
         }
 
@@ -21,15 +22,9 @@ pipeline {
             }
         }
 
-        stage('Run tests') {
+        stage('Package Application') {
             steps {
-                sh 'mvn test runs'
-            }
-        }
-
-        stage('package the application') {
-            steps {
-                echo ' mvn application package...'
+                sh 'mvn package'
             }
         }
     }
