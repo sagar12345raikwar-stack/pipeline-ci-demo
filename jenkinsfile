@@ -1,41 +1,62 @@
 pipeline {
-    agent any
+agent any
 
-    stages {
+```
+stages {
 
-        stage('Checkout') {
-            steps {
-                git branch: 'Main',
-                    url: 'https://github.com/sagar12345raikwar-stack/pipeline-ci-demo.git'
-            }
-        }
-
-        stage('Build Application') {
-            steps {
-                sh 'mvn clean compile'
-            }
-        }
-
-        stage('Run Tests') {
-            steps {
-                sh 'mvn test'
-            }
-        }
-
-        stage('Package Application') {
-            steps {
-                sh 'mvn package'
-            }
+    stage('Checkout') {
+        steps {
+            git branch: 'Main',
+                url: 'https://github.com/sagar12345raikwar-stack/pipeline-ci-demo.git'
         }
     }
 
-    post {
-        success {
-            echo 'Build Successful!'
-        }
-
-        failure {
-            echo 'Build Failed!'
+    stage('Build Application') {
+        steps {
+            sh 'mvn clean compile'
         }
     }
+
+    stage('Run Tests') {
+        steps {
+            sh 'mvn test'
+        }
+    }
+
+    stage('Code Coverage') {
+        steps {
+            sh 'mvn jacoco:report'
+        }
+    }
+
+    stage('Static Code Analysis') {
+        steps {
+            sh 'mvn checkstyle:check'
+        }
+    }
+
+    stage('Package Application') {
+        steps {
+            sh 'mvn package'
+        }
+    }
+
+    stage('Archive Artifacts') {
+        steps {
+            archiveArtifacts artifacts: 'target/*.jar', fingerprint: true
+        }
+    }
+}
+
+post {
+    success {
+        echo 'Build Successful!'
+    }
+
+    failure {
+        echo 'Build Failed!'
+    }
+}
+```
+
 }
