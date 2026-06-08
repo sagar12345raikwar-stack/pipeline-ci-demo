@@ -1,0 +1,62 @@
+pipeline {
+    agent any
+
+    stages {
+
+        stage('Checkout Code') {
+            steps {
+                git branch: 'main',
+                    url: 'https://github.com/sagar12345raikwar-stack/pipeline-ci-demo.git'
+            }
+        }
+
+        stage('Parallel Execution') {
+            parallel {
+
+                stage('Build') {
+                    steps {
+                        echo 'Building Application...'
+                        sh 'sleep 10'
+                    }
+                }
+
+                stage('Unit Test') {
+                    steps {
+                        echo 'Running Unit Tests...'
+                        sh 'sleep 10'
+                    }
+                }
+
+                stage('Code Quality') {
+                    steps {
+                        echo 'Running SonarQube Analysis...'
+                        sh 'sleep 10'
+                    }
+                }
+
+                stage('Security Scan') {
+                    steps {
+                        echo 'Running Security Scan...'
+                        sh 'sleep 10'
+                    }
+                }
+
+                stage('Package') {
+                    steps {
+                        echo 'Packaging Application...'
+                        sh 'sleep 10'
+                    }
+                }
+            }
+        }
+    }
+
+    post {
+        success {
+            echo 'Pipeline completed successfully!'
+        }
+        failure {
+            echo 'Pipeline failed!'
+        }
+    }
+}
