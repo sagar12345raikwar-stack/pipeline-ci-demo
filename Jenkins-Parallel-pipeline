@@ -1,6 +1,10 @@
 pipeline {
     agent any
 
+    tools {
+        maven 'maven'
+    }
+
     stages {
 
         stage('Checkout Code') {
@@ -15,36 +19,33 @@ pipeline {
 
                 stage('Build') {
                     steps {
-                        echo 'Building Application...'
-                        sh 'sleep 10'
+                        sh 'mvn clean compile'
                     }
                 }
 
                 stage('Unit Test') {
                     steps {
-                        echo 'Running Unit Tests...'
-                        sh 'sleep 10'
+                        sh 'mvn test'
                     }
                 }
 
                 stage('Code Quality') {
                     steps {
-                        echo 'Running SonarQube Analysis...'
-                        sh 'sleep 10'
+                        echo 'Running Code Quality Checks'
+                        sh 'mvn checkstyle:check || true'
                     }
                 }
 
                 stage('Security Scan') {
                     steps {
-                        echo 'Running Security Scan...'
-                        sh 'sleep 10'
+                        echo 'Running Security Scan'
+                        sh 'mvn dependency-check:check || true'
                     }
                 }
 
                 stage('Package') {
                     steps {
-                        echo 'Packaging Application...'
-                        sh 'sleep 10'
+                        sh 'mvn package -DskipTests'
                     }
                 }
             }
