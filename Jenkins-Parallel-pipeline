@@ -10,14 +10,14 @@ pipeline {
             }
         }
 
-        stage('Parallel Execution') {
-            parallel {
+        stage('Build') {
+            steps {
+                sh 'mvn clean compile'
+            }
+        }
 
-                stage('Build') {
-                    steps {
-                        sh 'mvn clean compile'
-                    }
-                }
+        stage('Parallel Checks') {
+            parallel {
 
                 stage('Unit Test') {
                     steps {
@@ -38,12 +38,12 @@ pipeline {
                         sh 'mvn dependency-check:check || true'
                     }
                 }
+            }
+        }
 
-                stage('Package') {
-                    steps {
-                        sh 'mvn package -DskipTests'
-                    }
-                }
+        stage('Package') {
+            steps {
+                sh 'mvn package -DskipTests'
             }
         }
     }
